@@ -21,12 +21,12 @@ def grabBatch():
 histories = []
 futures = []
 
-for x in range(1500):
+for x in range(15):
     print(x)
     try:
         history, future = grabBatch()
         histories.append(history)
-        futures.append(future)
+        futures.append([future])
     except:
         print('fail')
         continue
@@ -36,7 +36,7 @@ load = np.load('collectedData.npz', allow_pickle=True)
 for h in load['histories']:
     histories.append(h)
 for f in load['futures']:
-    futures.append(f)
+    futures.append([f])
 
 np.savez('collectedData.npz', histories = np.asarray(histories), futures = np.asarray(futures))
 
