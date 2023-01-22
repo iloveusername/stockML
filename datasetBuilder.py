@@ -13,19 +13,35 @@ def grabBatch():
     priceHistory = list(priceHistory['Open'])
     maxNum = len(priceHistory) - 1010
     startBatch = random.randint(0, maxNum)
-    priceHistory = [priceHistory[startBatch:startBatch + 1000], priceHistory[startBatch+1010]]
-    #print(priceHistory)
-    return priceHistory
+    history = priceHistory[startBatch:startBatch + 1000]
+    future = priceHistory[startBatch+1010]
+    return history, future
 
 #grabBatch()
-batches = []
+histories = []
+futures = []
 
-for x in range(5):
-    batch = grabBatch()
-    batches.append(batch)
+for x in range(150):
+    print(x)
+    try:
+        history, future = grabBatch()
+        histories.append(history)
+        futures.append(future)
+    except:
+        break
 
-np.savez('collectedData.npz', collectedData = np.asarray(batches))
+load = np.load('collectedData.npz', allow_pickle=True)
 
-funny = np.load('collectedData.npz', allow_pickle=True)
-funny = funny['collectedData']
-print(funny)
+for h in load['histories']:
+    histories.append(h)
+for f in load['futures']:
+    futures.append(f)
+
+np.savez('collectedData.npz', histories = np.asarray(histories), futures = np.asarray(futures))
+
+load = np.load('collectedData.npz', allow_pickle=True)
+print(len(load['futures']))
+print(len(load['histories']))
+
+print(load['histories'][50])
+print(load['futures'][50])
