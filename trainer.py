@@ -1,3 +1,4 @@
+import math
 import time
 import random
 import numpy as np
@@ -93,8 +94,11 @@ for epoch in range(num_epochs):
         print('\n')
         print(f'epoch:{epoch+1}, loss = {loss.item()}')
         with torch.no_grad():
-            print(f'Estimated Action = {model(torch.from_numpy(stateScale[testLoc])).numpy()}')
-            print(f'Actual Action = {actions[testLoc]}')
+            a = model(torch.from_numpy(stateScale[testLoc])).numpy()
+            b = actions[testLoc]
+            print(f'Estimated Action = {a}')
+            print(f'Actual Action = {b}')
+            print(f'Difference = {abs(b-a)}')
 
     if (epoch+1) % 5000 == 0:
         print('Saving Model...')
