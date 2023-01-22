@@ -21,14 +21,15 @@ def grabBatch():
 histories = []
 futures = []
 
-for x in range(150):
+for x in range(500):
     print(x)
     try:
         history, future = grabBatch()
         histories.append(history)
         futures.append(future)
     except:
-        break
+        print('fail')
+        continue
 
 load = np.load('collectedData.npz', allow_pickle=True)
 
@@ -43,5 +44,5 @@ load = np.load('collectedData.npz', allow_pickle=True)
 print(len(load['futures']))
 print(len(load['histories']))
 
-print(load['histories'][50])
+print(load['histories'][50][1])
 print(load['futures'][50])
