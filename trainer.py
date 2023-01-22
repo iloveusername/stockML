@@ -1,4 +1,5 @@
 import time
+import random
 import numpy as np
 import torch
 import torch.nn as nn
@@ -33,9 +34,10 @@ class NeuralNet(nn.Module):
 scale = StandardScaler()
 data = np.load('collectedData.npz', allow_pickle=True)
 states = data['histories']
-states = states[0:28]
-states = scale.fit_transform(states)
+stateScale = scale.fit_transform(states)
+states = stateScale[0:28]
 actions = data['futures']
+actions = actions[0:28]
 # actions = scale.fit_transform(actions)
 print(states[0])
 
@@ -53,32 +55,31 @@ modelName = 'firstTry.pt'
 input_size = n_features
 _, output_size = y.shape
 # print(output_size)
-hidden_size = 256
+hidden_size = 256*2
 model = NeuralNet(input_size, hidden_size, output_size)
-#model.load_state_dict(torch.load(modelName))
+model.load_state_dict(torch.load(modelName))
 
 # Config Stuff
 learning_rate = 0.001
 criterion = nn.MSELoss()
-#optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 optimizer = optim.Adam(model.parameters(), lr=learning_rate, eps=1e-6)
 
 # Train Model
 model.train()
-num_epochs = 2
+num_epochs = 1000000000
 for epoch in range(num_epochs):
+    newStart = random.randint(0, 200)
+    testLoc = random.randint(0, 27)
+    states = stateScale[newStart:newStart+28]
+    X = torch.from_numpy(states)
+    X = X.to(torch.float32)
+
+    y = torch.from_numpy(data['futures'][newStart:newStart+28])
+    y = y.to(torch.float32).unsqueeze(1)
 
     y_predicted = model(X)
-    print(f'y = {y}')
-    print(f'y_pred = {y_predicted}')
-    print(X.dtype)
-    print(y.dtype)
-    print(y_predicted.dtype)
 
     loss = criterion(y, y_predicted)
-
-    print(y.size())
-    print(y_predicted.size())
 
     loss.backward()
 
@@ -86,5 +87,15 @@ for epoch in range(num_epochs):
 
     optimizer.zero_grad()
 
-    if (epoch+1) % 5 == 0:
+    if (epoch+1) % 200 == 0:
+        # print(y.size())
+        # print(y_predicted.size())
+        print('\n')
         print(f'epoch:{epoch+1}, loss = {loss.item()}')
+        with torch.no_grad():
+            print(f'Estimated Action = {model(torch.from_numpy(stateScale[testLoc])).numpy()}')
+            print(f'Actual Action = {actions[testLoc]}')
+
+    if (epoch+1) % 5000 == 0:
+        print('Saving Model...')
+        torch.save(model.state_dict(), modelName)
