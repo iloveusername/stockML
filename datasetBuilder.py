@@ -21,7 +21,7 @@ def grabBatch():
 histories = []
 futures = []
 
-for x in range(500):
+for x in range(1500):
     print(x)
     try:
         history, future = grabBatch()
