@@ -26,7 +26,7 @@ for x in range(15):
     try:
         history, future = grabBatch()
         histories.append(history)
-        futures.append([future])
+        futures.append(future)
     except:
         print('fail')
         continue

@@ -16,7 +16,8 @@ class NeuralNet(nn.Module):
         self.l1 = nn.Linear(input_size, hidden_size)
         self.l2 = nn.Linear(hidden_size, hidden_size)
         self.l3 = nn.Linear(hidden_size, hidden_size)
-        self.l4 = nn.Linear(hidden_size, num_classes)
+        self.l4 = nn.Linear(hidden_size, hidden_size)
+        self.l5 = nn.Linear(hidden_size, num_classes)
     def forward(self, x):
         #x = x.to(torch.float32)
         out = self.l1(x)
@@ -26,6 +27,8 @@ class NeuralNet(nn.Module):
         out = self.l3(out)
         out = self.relu(out)
         out = self.l4(out)
+        out = self.relu(out)
+        out = self.l5(out)
         return out
 
 # Prepare Data
@@ -34,6 +37,15 @@ scale = StandardScaler()
 data = np.load('collectedData.npz', allow_pickle=True)
 states = data['histories']
 stateScale = scale.fit_transform(states)
+# temp = []
+# for state in stateScale:
+#     for spec in state:
+#         print(spec)
+#         if math.isnan(state):
+#             continue
+#         else:
+#             temp.append(state)
+# states = np.asarray(temp)
 states = stateScale[0:28]
 actions = data['futures']
 actions = actions[0:28]
@@ -50,7 +62,7 @@ print(y)
 n_samples, n_features = X.shape
 
 # Prepare Model
-modelName = 'firstTry.pt'
+modelName = 'secondTry.pt'
 input_size = n_features
 _, output_size = y.shape
 # print(output_size)
@@ -59,16 +71,16 @@ model = NeuralNet(input_size, hidden_size, output_size)
 model.load_state_dict(torch.load(modelName))
 
 # Config Stuff
-learning_rate = 0.001
-criterion = nn.MSELoss()
+learning_rate = 0.0001
+criterion = nn.L1Loss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate, eps=1e-6)
 
 # Train Model
-torch.autograd.detect_anomaly(True)
+# torch.autograd.detect_anomaly(True)
 model.train()
 num_epochs = 1000000000
 for epoch in range(num_epochs):
-    newStart = random.randint(0, 1700)
+    newStart = random.randint(0, 1900)
     testLoc = random.randint(0, 27)
     states = stateScale[newStart:newStart+28]
     X = torch.from_numpy(states)
