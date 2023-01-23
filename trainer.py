@@ -7,14 +7,12 @@ import torch.nn as nn
 import torch.optim as optim
 from sklearn.preprocessing import StandardScaler
 
+# https://discuss.pytorch.org/t/getting-nan-after-first-iteration-with-custom-loss/25929/3
+
 class NeuralNet(nn.Module):
     def __init__(self, input_size, hidden_size, num_classes):
         super(NeuralNet, self).__init__()
-        self.relu = nn.ReLU()
-
-        # self.l1 = nn.Linear(input_size, num_classes)
-
-
+        self.relu = nn.LeakyReLU()
         self.l1 = nn.Linear(input_size, hidden_size)
         self.l2 = nn.Linear(hidden_size, hidden_size)
         self.l3 = nn.Linear(hidden_size, hidden_size)
@@ -66,10 +64,11 @@ criterion = nn.MSELoss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate, eps=1e-6)
 
 # Train Model
+torch.autograd.detect_anomaly(True)
 model.train()
 num_epochs = 1000000000
 for epoch in range(num_epochs):
-    newStart = random.randint(0, 200)
+    newStart = random.randint(0, 1700)
     testLoc = random.randint(0, 27)
     states = stateScale[newStart:newStart+28]
     X = torch.from_numpy(states)
