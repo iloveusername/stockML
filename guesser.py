@@ -34,11 +34,10 @@ states = list(data['histories'])
 
 #9:30 to 3:30
 
-tickerName = 'AAPL'
+tickerName = 'LI'
 priceHistory = yf.Ticker(tickerName).history(period='2y', interval='1h')
 getTime = priceHistory
 getTime = getTime[len(getTime)-10:len(getTime)]
-# getTime =
 getTime = str(getTime.iloc[9].name)[11:13]
 getTime = int(getTime)-9
 days = int(((getTime + 10) - (getTime+10) % 6)/6)
@@ -56,6 +55,7 @@ priceHistory = list(priceHistory['Open'])
 priceHistory = priceHistory[len(priceHistory)-1000:len(priceHistory)]
 states.append(priceHistory)
 priceHistory = states
+currentPrice = priceHistory[len(priceHistory)-1][999]
 priceHistory = scale.fit_transform(priceHistory)
 priceHistory = priceHistory[len(priceHistory)-1]
 priceHistory = torch.from_numpy(np.asarray(priceHistory))
@@ -71,9 +71,15 @@ model.load_state_dict(torch.load(modelName))
 model.eval()
 with torch.no_grad():
     prediction = model(X).numpy()[0]
+    prediction = prediction.item()
+    difference = prediction - currentPrice
     print('\n')
     print('#####################')
-    print(tickerName)
+    print(f'Ticker: {tickerName}')
     print(predTime)
-    print(str(prediction.item()))
+    print(f'Prediction: ${prediction:.2f}')
+    if difference > 0:
+        print(f'Gain: +{difference:.2f}')
+    else:
+        print(f'Loss: {difference:.2f}')
     print('#####################')
