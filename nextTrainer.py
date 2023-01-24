@@ -79,7 +79,7 @@ optimizer = optim.Adam(model.parameters(), lr=learning_rate, eps=1e-6)
 model.train()
 num_epochs = 1000000000
 for epoch in range(num_epochs):
-    testLoc = 0
+    testLoc = random.randint(0, n_samples)
 
     y_predicted = model(X)
 
