@@ -67,7 +67,7 @@ print(input_size)
 print(output_size)
 hidden_size = 256*2
 model = NeuralNet(input_size, hidden_size, output_size)
-#model.load_state_dict(torch.load(modelName))
+model.load_state_dict(torch.load(modelName))
 
 # Config Stuff
 learning_rate = 0.001
@@ -87,13 +87,13 @@ for epoch in range(num_epochs):
 
     loss.backward()
 
-    torch.nn.utils.clip_grad_norm_(model.parameters(), 5)
+    #torch.nn.utils.clip_grad_norm_(model.parameters(), 5)
 
     optimizer.step()
 
     optimizer.zero_grad()
 
-    if (epoch+1) % 1 == 0:
+    if (epoch+1) % 5 == 0:
         print('\n')
         print(f'epoch:{epoch+1}, loss = {loss.item()}')
         with torch.no_grad():
@@ -104,5 +104,10 @@ for epoch in range(num_epochs):
             print(f'Difference = {abs(b-a)}')
 
     if (epoch+1) % 250 == 0:
+        print('\n')
+        print('##############')
         print('Saving Model...')
+        print('##############')
+        print('\n')
+
         torch.save(model.state_dict(), modelName)
