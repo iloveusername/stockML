@@ -70,8 +70,8 @@ model = NeuralNet(input_size, hidden_size, output_size)
 model.load_state_dict(torch.load(modelName))
 
 # Config Stuff
-learning_rate = 0.001
-criterion = nn.MSELoss()
+learning_rate = 0.0001
+criterion = nn.L1Loss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate, eps=1e-6)
 
 # Train Model
@@ -79,7 +79,7 @@ optimizer = optim.Adam(model.parameters(), lr=learning_rate, eps=1e-6)
 model.train()
 num_epochs = 1000000000
 for epoch in range(num_epochs):
-    testLoc = random.randint(0, n_samples)
+    testLoc = random.randint(0, n_samples-1)
 
     y_predicted = model(X)
 
