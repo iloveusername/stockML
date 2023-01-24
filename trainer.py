@@ -80,11 +80,12 @@ optimizer = optim.Adam(model.parameters(), lr=learning_rate, eps=1e-6)
 model.train()
 num_epochs = 1000000000
 for epoch in range(num_epochs):
-    newStart = random.randint(0, 1900)
+    newStart = random.randint(0, 2400)
     testLoc = random.randint(0, 27)
     states = stateScale[newStart:newStart+28]
     X = torch.from_numpy(states)
     X = X.to(torch.float32)
+    X = torch.nan_to_num(X)
 
     y = torch.from_numpy(data['futures'][newStart:newStart+28])
     y = y.to(torch.float32).unsqueeze(1)
