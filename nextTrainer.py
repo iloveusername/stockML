@@ -37,10 +37,9 @@ scale = StandardScaler()
 data = np.load('fixedData.npz', allow_pickle=True)
 states = data['histories']
 stateScale = scale.fit_transform(states)
-states = stateScale
 actions = data['futures']
 
-X = torch.from_numpy(states)
+X = torch.from_numpy(stateScale)
 X = X.to(torch.float32)
 # X = X[3082:3083]
 
@@ -93,15 +92,19 @@ for epoch in range(num_epochs):
 
     optimizer.zero_grad()
 
-    if (epoch+1) % 5 == 0:
-        print('\n')
-        print(f'epoch:{epoch+1}, loss = {loss.item()}')
+    if (epoch+1) % 10 == 0:
+        # print('\n')
+        print('##############################')
+        print(f'epoch:{epoch+1}, loss = ${loss.item():.2f}')
+        print(f'Previous Price = ${states[testLoc][len(states[testLoc])-1]:.2f}')
         with torch.no_grad():
             a = model(X[testLoc]).numpy()[0]
             b = y[testLoc].numpy()[0]
-            print(f'Estimated Action = {a}')
-            print(f'Actual Action = {b}')
-            print(f'Difference = {abs(b-a)}')
+            print(f'Estimated Action = ${a:.2f}')
+            print(f'Actual Action = ${b:.2f}')
+            print(f'Difference = ${b-a:.2f}')
+        print('##############################')
+
 
     if (epoch+1) % 250 == 0:
         print('\n')

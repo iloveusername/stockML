@@ -34,7 +34,7 @@ states = list(data['histories'])
 
 #9:30 to 3:30
 
-tickerName = 'NFLX'
+tickerName = 'AMC'
 priceHistory = yf.Ticker(tickerName).history(period='1y', interval='1h')
 getTime = priceHistory
 getTime = getTime[len(getTime)-10:len(getTime)]

@@ -21,9 +21,9 @@ def grabBatch():
 histories = []
 futures = []
 
-epochs = 750
+epochs = 1500
 for x in range(epochs):
-    print(x/epochs*100)
+    print(f'{x/epochs*100:.2f}%')
     try:
         history, future = grabBatch()
         histories.append(history)
