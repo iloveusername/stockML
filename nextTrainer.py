@@ -34,37 +34,44 @@ class NeuralNet(nn.Module):
 # Prepare Data
 
 scale = StandardScaler()
-data = np.load('collectedData.npz', allow_pickle=True)
+data = np.load('fixedData.npz', allow_pickle=True)
 states = data['histories']
 stateScale = scale.fit_transform(states)
-
 states = stateScale
 actions = data['futures']
 
 X = torch.from_numpy(states)
 X = X.to(torch.float32)
+# X = X[3082:3083]
+
 # print(X)
 
 y = torch.from_numpy(actions)
+ty = y
+# y = y[3082:3083]
+print(X)
+print(y)
+
 y = y.to(torch.float32).unsqueeze(1)
 # print(y)
 
-exit()
-
 n_samples, n_features = X.shape
+print(n_features)
 
 # Prepare Model
-modelName = 'secondTry.pt'
+modelName = 'MarkIII.pt'
 input_size = n_features
 _, output_size = y.shape
-# print(output_size)
+print(y)
+print(input_size)
+print(output_size)
 hidden_size = 256*2
 model = NeuralNet(input_size, hidden_size, output_size)
-model.load_state_dict(torch.load(modelName))
+#model.load_state_dict(torch.load(modelName))
 
 # Config Stuff
 learning_rate = 0.001
-criterion = nn.L1Loss()
+criterion = nn.MSELoss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate, eps=1e-6)
 
 # Train Model
@@ -72,19 +79,7 @@ optimizer = optim.Adam(model.parameters(), lr=learning_rate, eps=1e-6)
 model.train()
 num_epochs = 1000000000
 for epoch in range(num_epochs):
-    newStart = random.randint(0, 5000)
-    testLoc = random.randint(0, 27)
-    states = stateScale[newStart:newStart+28]
-    X = torch.from_numpy(states)
-    X = X.to(torch.float32)
-    X = torch.nan_to_num(X)
-
-    print(X)
-    print(y)
-    exit()
-
-    y = torch.from_numpy(data['futures'][newStart:newStart+28])
-    y = y.to(torch.float32).unsqueeze(1)
+    testLoc = 0
 
     y_predicted = model(X)
 
@@ -98,18 +93,16 @@ for epoch in range(num_epochs):
 
     optimizer.zero_grad()
 
-    if (epoch+1) % 200 == 0:
-        # print(y.size())
-        # print(y_predicted.size())
+    if (epoch+1) % 1 == 0:
         print('\n')
         print(f'epoch:{epoch+1}, loss = {loss.item()}')
         with torch.no_grad():
-            a = model(torch.from_numpy(stateScale[testLoc])).numpy()
-            b = actions[testLoc]
+            a = model(X[testLoc]).numpy()[0]
+            b = y[testLoc].numpy()[0]
             print(f'Estimated Action = {a}')
             print(f'Actual Action = {b}')
             print(f'Difference = {abs(b-a)}')
 
-    if (epoch+1) % 5000 == 0:
+    if (epoch+1) % 250 == 0:
         print('Saving Model...')
         torch.save(model.state_dict(), modelName)

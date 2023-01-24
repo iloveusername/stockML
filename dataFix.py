@@ -5,14 +5,30 @@ futures = []
 
 load = np.load('collectedData.npz', allow_pickle=True)
 
-for h in load['histories']:
-    print(h)
+needToRemove = []
+
+for j, h in enumerate(load['histories']):
+    for i, number in enumerate(h):
+        if np.isnan(number):
+            if j not in needToRemove:
+                needToRemove.append(j)
     histories.append(h)
-for f in load['futures']:
+for j, f in enumerate(load['futures']):
+    if np.isnan(f):
+        if j not in needToRemove:
+            needToRemove.append(j)
     futures.append(f)
+
+needToRemove.sort()
+needToRemove.reverse()
+print(needToRemove)
+
+for index in needToRemove:
+    histories.pop(index)
+    futures.pop(index)
+
 
 print(len(histories))
 print(len(futures))
 
-print(histories[5201][999])
-print(futures[5201])
+np.savez('fixedData.npz', histories = np.asarray(histories), futures = np.asarray(futures))
