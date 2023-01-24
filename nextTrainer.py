@@ -70,7 +70,7 @@ model = NeuralNet(input_size, hidden_size, output_size)
 model.load_state_dict(torch.load(modelName))
 
 # Config Stuff
-learning_rate = 0.0001
+learning_rate = 0.00001
 criterion = nn.L1Loss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate, eps=1e-6)
 

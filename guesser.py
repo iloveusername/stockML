@@ -34,8 +34,8 @@ states = list(data['histories'])
 
 #9:30 to 3:30
 
-tickerName = 'LI'
-priceHistory = yf.Ticker(tickerName).history(period='2y', interval='1h')
+tickerName = 'NFLX'
+priceHistory = yf.Ticker(tickerName).history(period='1y', interval='1h')
 getTime = priceHistory
 getTime = getTime[len(getTime)-10:len(getTime)]
 getTime = str(getTime.iloc[9].name)[11:13]
@@ -79,7 +79,7 @@ with torch.no_grad():
     print(predTime)
     print(f'Prediction: ${prediction:.2f}')
     if difference > 0:
-        print(f'Gain: +{difference:.2f}')
+        print(f'Gain: +{difference:.2f}, ${currentPrice:.2f}, +{(prediction/currentPrice*100)-100:.2f}%')
     else:
-        print(f'Loss: {difference:.2f}')
+        print(f'Loss: {difference:.2f}, ${currentPrice:.2f}, -{100-(prediction/currentPrice*100):.2f}%')
     print('#####################')
