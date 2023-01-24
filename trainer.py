@@ -37,6 +37,7 @@ scale = StandardScaler()
 data = np.load('collectedData.npz', allow_pickle=True)
 states = data['histories']
 stateScale = scale.fit_transform(states)
+
 # temp = []
 # for state in stateScale:
 #     for spec in state:
@@ -46,6 +47,7 @@ stateScale = scale.fit_transform(states)
 #         else:
 #             temp.append(state)
 # states = np.asarray(temp)
+
 states = stateScale[0:28]
 actions = data['futures']
 actions = actions[0:28]
@@ -71,7 +73,7 @@ model = NeuralNet(input_size, hidden_size, output_size)
 model.load_state_dict(torch.load(modelName))
 
 # Config Stuff
-learning_rate = 0.0001
+learning_rate = 0.001
 criterion = nn.L1Loss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate, eps=1e-6)
 
@@ -80,7 +82,7 @@ optimizer = optim.Adam(model.parameters(), lr=learning_rate, eps=1e-6)
 model.train()
 num_epochs = 1000000000
 for epoch in range(num_epochs):
-    newStart = random.randint(0, 2400)
+    newStart = random.randint(0, 5000)
     testLoc = random.randint(0, 27)
     states = stateScale[newStart:newStart+28]
     X = torch.from_numpy(states)
@@ -95,6 +97,8 @@ for epoch in range(num_epochs):
     loss = criterion(y, y_predicted)
 
     loss.backward()
+
+    torch.nn.utils.clip_grad_norm_(model.parameters(), 5)
 
     optimizer.step()
 
