@@ -52,14 +52,14 @@ states = stateScale[0:28]
 actions = data['futures']
 actions = actions[0:28]
 # actions = scale.fit_transform(actions)
-print(states[0])
+# print(states[0])
 
 X = torch.from_numpy(states)
 X = X.to(torch.float32)
-print(X)
+# print(X)
 y = torch.from_numpy(actions)
 y = y.to(torch.float32).unsqueeze(1)
-print(y)
+# print(y)
 
 n_samples, n_features = X.shape
 
@@ -88,6 +88,10 @@ for epoch in range(num_epochs):
     X = torch.from_numpy(states)
     X = X.to(torch.float32)
     X = torch.nan_to_num(X)
+
+    print(X)
+    print(y)
+    exit()
 
     y = torch.from_numpy(data['futures'][newStart:newStart+28])
     y = y.to(torch.float32).unsqueeze(1)
