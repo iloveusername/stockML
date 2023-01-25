@@ -33,30 +33,71 @@ class NeuralNet(nn.Module):
         return out
 
 
-#We have data from 6:30 - 12:30 in (PST)
+def getTime(currentTime, currentDay):
+    for x in range(10):
+        currentTime += 1
+        if currentTime > 12:
+            currentTime = 6
+            currentDay += 1
+            if currentDay > 4:
+                currentDay = 0
+    if currentTime < 10:
+        currentTime = '0' + str(currentTime)
+    else:
+        currentTime = str(currentTime)
+    return currentTime, currentDay
+
+
+def getPrice(tickerName, statesList):
+    scale = StandardScaler()
+    priceHistory = yf.Ticker(tickerName).history(period='1y', interval='1h')
+    priceHistory = list(priceHistory['Open'])
+    priceHistory = priceHistory[len(priceHistory) - 1000:len(priceHistory)]
+    statesList.append(priceHistory)
+    priceHistory = states
+    currentPrice = priceHistory[len(priceHistory) - 1][999]
+    priceHistory = scale.fit_transform(priceHistory)
+    priceHistory = priceHistory[len(priceHistory) - 1]
+    priceHistory = torch.from_numpy(np.asarray(priceHistory))
+    priceHistory = priceHistory.to(torch.float32)
+    return priceHistory, currentPrice
+
+
 #############################
-currentTime = 6
+tickers = ['TSLA', 'BB', 'AAPL', 'BROS', 'GME', 'AMC', 'SPY', 'AMZN', 'GOOG', 'MSFT', 'UROY']
+modelName = 'MarkIV.pt'
+currentTime = 12
 currentDay = 1
 #############################
 
-for x in range(10):
-    currentTime += 1
-    if currentTime > 12:
-        currentTime = 6
-        currentDay += 1
-        if currentDay > 4:
-            currentDay = 0
+input_size = 1000
+hidden_size = 256*4
+model = NeuralNet(input_size, hidden_size, 1)
+model.load_state_dict(torch.load(modelName))
 
-if currentTime < 10:
-    currentTime = '0'+str(currentTime)
-else:
-    currentTime = str(currentTime)
+currentTime, currentDay = getTime(currentTime, currentDay)
 
 weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 print(f'{weekDays[currentDay]}, {currentTime}:30:00')
 
-# addDays = floor((currentTime+10)/6)-1
-# currentDay += addDays
-# currentTime -= 2
-# if currentTime < 6:
-#     currentTime += 6
+data = np.load('fixedData.npz', allow_pickle=True)
+states = list(data['histories'])
+
+for ticker in tickers:
+    priceHistory, currentPrice = getPrice(ticker, states)
+    model.eval()
+    with torch.no_grad():
+        prediction = model(priceHistory).numpy()[0]
+        prediction = prediction.item()
+        difference = prediction - currentPrice
+        print()
+        print('#####################')
+        print(f'Ticker: {ticker}')
+        print(f'{weekDays[currentDay]}, {currentTime}:30:00')
+        print(f'Current: ${currentPrice:.2f}')
+        print(f'Prediction: ${prediction:.2f}')
+        if difference > 0:
+            print(f'Gain: +${difference:.2f}, +{(prediction / currentPrice * 100) - 100:.2f}%')
+        else:
+            print(f'Loss: -${abs(difference):.2f}, ${currentPrice:.2f}, -{100 - (prediction / currentPrice * 100):.2f}%')
+        print('#####################')

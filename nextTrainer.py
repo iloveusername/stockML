@@ -114,3 +114,5 @@ for epoch in range(num_epochs):
         print('\n')
 
         torch.save(model.state_dict(), modelName)
+        if loss.item() < 0.35:
+            torch.save(model.state_dict(), 'stableML.pt')
