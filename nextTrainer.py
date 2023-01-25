@@ -33,6 +33,9 @@ class NeuralNet(nn.Module):
 
 # Prepare Data
 
+print(torch.cuda.is_available())
+exit()
+
 scale = StandardScaler()
 data = np.load('fixedData.npz', allow_pickle=True)
 states = data['histories']
@@ -69,7 +72,7 @@ model = NeuralNet(input_size, hidden_size, output_size)
 model.load_state_dict(torch.load(modelName))
 
 # Config Stuff
-learning_rate = 0.00001
+learning_rate = 0.0001
 criterion = nn.L1Loss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate, eps=1e-6)
 
