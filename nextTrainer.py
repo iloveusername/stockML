@@ -105,7 +105,6 @@ for epoch in range(num_epochs):
             print(f'Estimated Action = ${a:.2f}')
             print(f'Actual Action = ${b:.2f}')
             print(f'Difference = ${b - a:.2f}')
-        # print('##############################')
 
     if (epoch + 1) % 250 == 0:
         print('\n')

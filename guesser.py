@@ -83,7 +83,7 @@ with torch.no_grad():
     print(predTime)
     print(f'Prediction: ${prediction:.2f}')
     if difference > 0:
-        print(f'Gain: +{difference:.2f}, ${currentPrice:.2f}, +{(prediction/currentPrice*100)-100:.2f}%')
+        print(f'Gain: +${difference:.2f}, ${currentPrice:.2f}, +{(prediction/currentPrice*100)-100:.2f}%')
     else:
-        print(f'Loss: {difference:.2f}, ${currentPrice:.2f}, -{100-(prediction/currentPrice*100):.2f}%')
+        print(f'Loss: ${difference:.2f}, ${currentPrice:.2f}, -{100-(prediction/currentPrice*100):.2f}%')
     print('#####################')

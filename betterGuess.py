@@ -5,7 +5,7 @@ import yfinance as yf
 from randomTicker import randomTicker
 from datetime import datetime
 from sklearn.preprocessing import StandardScaler
-
+from math import floor
 
 class NeuralNet(nn.Module):
     def __init__(self, input_size, hidden_size, num_classes):
@@ -35,8 +35,28 @@ class NeuralNet(nn.Module):
 
 #We have data from 6:30 - 12:30 in (PST)
 #############################
-currentTime = 12
+currentTime = 6
 currentDay = 1
 #############################
 
-#We are going 10 hours into the future, that's 1 day and 4 hours:
+for x in range(10):
+    currentTime += 1
+    if currentTime > 12:
+        currentTime = 6
+        currentDay += 1
+        if currentDay > 4:
+            currentDay = 0
+
+if currentTime < 10:
+    currentTime = '0'+str(currentTime)
+else:
+    currentTime = str(currentTime)
+
+weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+print(f'{weekDays[currentDay]}, {currentTime}:30:00')
+
+# addDays = floor((currentTime+10)/6)-1
+# currentDay += addDays
+# currentTime -= 2
+# if currentTime < 6:
+#     currentTime += 6
