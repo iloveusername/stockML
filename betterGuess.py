@@ -33,6 +33,10 @@ class NeuralNet(nn.Module):
         return out
 
 
-scale = StandardScaler()
-data = np.load('fixedData.npz', allow_pickle=True)
-states = list(data['histories'])
+#We have data from 6:30 - 12:30 in (PST)
+#############################
+currentTime = 12
+currentDay = 1
+#############################
+
+#We are going 10 hours into the future, that's 1 day and 4 hours:
