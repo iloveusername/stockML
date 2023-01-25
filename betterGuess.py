@@ -50,6 +50,8 @@ def getTime(currentTime, currentDay):
 
 def getPrice(tickerName, statesList):
     scale = StandardScaler()
+    # priceHistory = yf.Ticker(tickerName).history(period='14d', interval='5m')
+    # priceHistory = yf.Ticker(tickerName).history(period='6m', interval='30m')
     priceHistory = yf.Ticker(tickerName).history(period='1y', interval='1h')
     priceHistory = list(priceHistory['Open'])
     priceHistory = priceHistory[len(priceHistory) - 1000:len(priceHistory)]

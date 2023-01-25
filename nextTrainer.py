@@ -88,7 +88,7 @@ for epoch in range(num_epochs):
 
     loss.backward()
 
-    torch.nn.utils.clip_grad_norm_(model.parameters(), 5)
+    # torch.nn.utils.clip_grad_norm_(model.parameters(), 5)
 
     optimizer.step()
 
