@@ -88,7 +88,7 @@ for epoch in range(num_epochs):
 
     loss.backward()
 
-    # torch.nn.utils.clip_grad_norm_(model.parameters(), 5)
+    torch.nn.utils.clip_grad_norm_(model.parameters(), 5)
 
     optimizer.step()
 
@@ -114,5 +114,5 @@ for epoch in range(num_epochs):
         print('\n')
 
         torch.save(model.state_dict(), modelName)
-        if loss.item() < 0.25:
+        if loss.item() < 0.20:
             torch.save(model.state_dict(), 'stableML.pt')

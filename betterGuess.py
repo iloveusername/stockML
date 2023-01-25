@@ -64,8 +64,8 @@ def getPrice(tickerName, statesList):
 
 
 #############################
-tickers = ['TSLA', 'BB', 'AAPL', 'BROS', 'GME', 'AMC', 'SPY', 'AMZN', 'GOOG', 'MSFT', 'UROY']
-modelName = 'MarkIV.pt'
+tickers = ['TSLA', 'BB', 'AAPL', 'BROS', 'GME', 'AMC', 'SPY', 'AMZN', 'GOOG', 'MSFT', 'UROY', 'NVDA', 'AMD', 'META', 'TXN', 'BAC', 'CVX', 'HD']
+# modelName = 'MarkIV.pt'
 modelName = 'stableML.pt'
 currentTime = 12
 currentDay = 1
