@@ -37,6 +37,7 @@ states = list(data['histories'])
 tickerName = 'AMC'
 priceHistory = yf.Ticker(tickerName).history(period='1y', interval='1h')
 getTime = priceHistory
+print(getTime)
 getTime = getTime[len(getTime)-10:len(getTime)]
 getTime = str(getTime.iloc[9].name)[11:13]
 getTime = int(getTime)-9
