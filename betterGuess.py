@@ -66,6 +66,7 @@ def getPrice(tickerName, statesList):
 #############################
 tickers = ['TSLA', 'BB', 'AAPL', 'BROS', 'GME', 'AMC', 'SPY', 'AMZN', 'GOOG', 'MSFT', 'UROY']
 modelName = 'MarkIV.pt'
+modelName = 'stableML.pt'
 currentTime = 12
 currentDay = 1
 #############################
@@ -99,5 +100,5 @@ for ticker in tickers:
         if difference > 0:
             print(f'Gain: +${difference:.2f}, +{(prediction / currentPrice * 100) - 100:.2f}%')
         else:
-            print(f'Loss: -${abs(difference):.2f}, ${currentPrice:.2f}, -{100 - (prediction / currentPrice * 100):.2f}%')
+            print(f'Loss: -${abs(difference):.2f}, -{100 - (prediction / currentPrice * 100):.2f}%')
         print('#####################')
