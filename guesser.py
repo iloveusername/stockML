@@ -14,7 +14,8 @@ class NeuralNet(nn.Module):
         self.l2 = nn.Linear(hidden_size, hidden_size)
         self.l3 = nn.Linear(hidden_size, hidden_size)
         self.l4 = nn.Linear(hidden_size, hidden_size)
-        self.l5 = nn.Linear(hidden_size, num_classes)
+        self.l5 = nn.Linear(hidden_size, hidden_size)
+        self.l6 = nn.Linear(hidden_size, num_classes)
 
     def forward(self, x):
         out = self.l1(x)
@@ -26,6 +27,8 @@ class NeuralNet(nn.Module):
         out = self.l4(out)
         out = self.relu(out)
         out = self.l5(out)
+        out = self.relu(out)
+        out = self.l6(out)
         return out
 
 scale = StandardScaler()
@@ -34,7 +37,7 @@ states = list(data['histories'])
 
 #9:30 to 3:30
 
-tickerName = 'AMC'
+tickerName = 'BROS'
 priceHistory = yf.Ticker(tickerName).history(period='1y', interval='1h')
 getTime = priceHistory
 print(getTime)
@@ -64,8 +67,8 @@ X = priceHistory.to(torch.float32)
 
 input_size = 1000
 # modelName = 'secondTry.pt'
-modelName = 'MarkIII.pt'
-hidden_size = 256*2
+modelName = 'MarkIV.pt'
+hidden_size = 256*4
 model = NeuralNet(input_size, hidden_size, 1)
 model.load_state_dict(torch.load(modelName))
 

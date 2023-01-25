@@ -71,7 +71,8 @@ model = model.to(device)
 
 # Config Stuff
 learning_rate = 0.0001
-criterion = nn.L1Loss()
+# criterion = nn.L1Loss()
+criterion = nn.MSELoss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate, eps=1e-6)
 
 # Train Model
@@ -93,7 +94,7 @@ for epoch in range(num_epochs):
 
     optimizer.zero_grad()
 
-    if (epoch + 1) % 5 == 0:
+    if (epoch + 1) % 10 == 0:
         # print('\n')
         print('##############################')
         print(f'epoch:{epoch + 1}, loss = ${loss.item():.2f}')
@@ -106,7 +107,7 @@ for epoch in range(num_epochs):
             print(f'Difference = ${b - a:.2f}')
         # print('##############################')
 
-    if (epoch + 1) % 100 == 0:
+    if (epoch + 1) % 250 == 0:
         print('\n')
         print('##############')
         print('Saving Model...')
