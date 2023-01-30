@@ -74,7 +74,7 @@ ticker = 'AMD'
 # modelName = 'MarkIV.pt'
 modelName = 'stableML.pt'
 currentTime = 12
-currentDay = 1
+currentDay = 2
 #############################
 
 input_size = 1000

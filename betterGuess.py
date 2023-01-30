@@ -70,7 +70,7 @@ tickers = ['TSLA', 'BB', 'AAPL', 'BROS', 'GME', 'AMC', 'SPY', 'AMZN', 'GOOG', 'M
 # modelName = 'MarkIV.pt'
 modelName = 'stableML.pt'
 currentTime = 12
-currentDay = 1
+currentDay = 2
 #############################
 
 input_size = 1000
